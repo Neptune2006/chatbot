@@ -20,26 +20,12 @@ body.forest { --bg: #051a10; --card: #0a291b; --text: #dcfce7; --subtext: #4ade8
 body.coffee { --bg: #271c19; --card: #3c2f2c; --text: #ede0d4; --subtext: #d6ccc2; --bot-bg: #5e503f; --user-bg: #a98467; --accent: #c0a080; --border: #7f5539; }
 body.terminal { --bg: #000000; --card: #000000; --text: #00ff41; --subtext: #008f11; --bot-bg: #001f05; --user-bg: #003b0a; --accent: #00ff41; --border: #003b0a; --font: "Courier New", monospace; }
 
-/* --- LAYOUT FIXES FOR MOBILE --- */
+/* --- LAYOUT --- */
 * { box-sizing: border-box; font-family: var(--font); -webkit-tap-highlight-color: transparent; transition: background 0.3s, color 0.3s; }
+body { margin: 0; height: 100dvh; display: flex; background: var(--bg); color: var(--text); overflow: hidden; }
 
-body { 
-  margin: 0; 
-  /* 🔴 KEY FIX: Use dynamic viewport height (dvh) so address bar doesn't hide content */
-  height: 100dvh; 
-  display: flex; 
-  background: var(--bg); 
-  color: var(--text); 
-  overflow: hidden; 
-}
-
-/* Sidebar (Desktop) */
-.sidebar {
-  width: 260px; background: var(--card); border-right: 1px solid var(--border);
-  display: flex; flex-direction: column; padding: 15px; flex-shrink: 0;
-  transition: transform 0.3s ease;
-  z-index: 100;
-}
+/* Sidebar */
+.sidebar { width: 260px; background: var(--card); border-right: 1px solid var(--border); display: flex; flex-direction: column; padding: 15px; flex-shrink: 0; transition: transform 0.3s ease; z-index: 100; }
 .brand { font-size: 1.5rem; font-weight: 800; margin-bottom: 20px; color: var(--accent); letter-spacing: -1px; display: flex; justify-content: space-between; align-items: center; }
 .btn-new { width: 100%; padding: 12px; border: none; border-radius: 8px; background: var(--accent); color: white; font-weight: 600; cursor: pointer; margin-bottom: 15px; box-shadow: 0 4px 6px -1px rgba(0,0,0,0.1); }
 .history-list { flex: 1; overflow-y: auto; margin-bottom: 10px; }
@@ -49,7 +35,7 @@ body {
 .chat-actions { opacity: 0.5; display: flex; gap: 5px; }
 .icon-btn { background: none; border: none; cursor: pointer; font-size: 1rem; padding: 4px; color: var(--text); }
 
-/* Main Chat Area */
+/* Main */
 .main { flex: 1; display: flex; flex-direction: column; background: var(--bg); position: relative; width: 100%; height: 100%; }
 .header { padding: 10px 15px; background: var(--card); border-bottom: 1px solid var(--border); display: flex; justify-content: space-between; align-items: center; height: 60px; flex-shrink: 0; }
 .header-left { display: flex; align-items: center; gap: 10px; overflow: hidden; }
@@ -63,45 +49,14 @@ select, .btn-small { padding: 6px 10px; border-radius: 6px; border: 1px solid va
 .msg.user { background: var(--user-bg); color: #fff; align-self: flex-end; border-bottom-right-radius: 4px; }
 .msg.error { background: #ef4444; color: white; align-self: center; font-size: 0.8rem; }
 
-/* 🔴 INPUT AREA FIXES */
-.input-area { 
-  padding: 15px; 
-  background: var(--card); 
-  border-top: 1px solid var(--border); 
-  display: flex; gap: 10px; align-items: center; 
-  flex-shrink: 0; /* Prevents it from being squished */
-  /* Adds padding for iPhone Home Bar */
-  padding-bottom: max(15px, env(safe-area-inset-bottom)); 
-}
-
-/* 🔴 FONT SIZE FIX: 16px prevents iOS from zooming in when you tap */
+.input-area { padding: 15px; background: var(--card); border-top: 1px solid var(--border); display: flex; gap: 10px; align-items: center; flex-shrink: 0; padding-bottom: max(15px, env(safe-area-inset-bottom)); }
 input { flex: 1; padding: 12px; border-radius: 20px; border: 1px solid var(--border); background: var(--bg); color: var(--text); outline: none; font-size: 16px; }
 .send-btn { width: 45px; height: 45px; border-radius: 50%; border: none; background: var(--accent); color: white; cursor: pointer; display: flex; align-items: center; justify-content: center; font-size: 1.2rem; flex-shrink: 0; }
 
-/* 📱 MOBILE RESPONSIVENESS */
 @media (max-width: 768px) {
-  .menu-btn { display: block; }
-  .sidebar {
-    position: fixed; top: 0; left: 0; height: 100%; width: 280px;
-    transform: translateX(-100%); /* Hidden by default */
-    box-shadow: 10px 0 20px rgba(0,0,0,0.5);
-  }
-  .sidebar.open { transform: translateX(0); } /* Slide in */
-  
-  .overlay {
-    position: fixed; top: 0; left: 0; width: 100%; height: 100%;
-    background: rgba(0,0,0,0.5); z-index: 90; display: none;
-    backdrop-filter: blur(2px);
-  }
-  .overlay.active { display: block; }
-  
-  .header-controls select { max-width: 80px; } 
-  .chat-actions { opacity: 1; }
+  .menu-btn { display: block; } .sidebar { position: fixed; top: 0; left: 0; height: 100%; width: 280px; transform: translateX(-100%); box-shadow: 10px 0 20px rgba(0,0,0,0.5); } .sidebar.open { transform: translateX(0); } .overlay { position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0,0,0,0.5); z-index: 90; display: none; backdrop-filter: blur(2px); } .overlay.active { display: block; } .header-controls select { max-width: 80px; } .chat-actions { opacity: 1; }
 }
-
-/* Scrollbar */
-::-webkit-scrollbar { width: 4px; }
-::-webkit-scrollbar-thumb { background: var(--border); border-radius: 2px; }
+::-webkit-scrollbar { width: 4px; } ::-webkit-scrollbar-thumb { background: var(--border); border-radius: 2px; }
 </style>
 </head>
 <body>
@@ -109,10 +64,7 @@ input { flex: 1; padding: 12px; border-radius: 20px; border: 1px solid var(--bor
 <div class="overlay" onclick="toggleSidebar()"></div>
 
 <div class="sidebar" id="sidebar">
-  <div class="brand">
-    hri ⚡
-    <button class="icon-btn" onclick="toggleSidebar()" style="display:none;" id="closeSidebar">✕</button>
-  </div>
+  <div class="brand">hri ⚡ <button class="icon-btn" onclick="toggleSidebar()" style="display:none;" id="closeSidebar">✕</button></div>
   <button class="btn-new" onclick="newChat()">+ New Chat</button>
   <div class="history-list" id="chatList"></div>
   <div style="font-size:11px; color:var(--subtext); text-align:center; margin-top:auto;" id="model-status">Connecting...</div>
@@ -122,20 +74,14 @@ input { flex: 1; padding: 12px; border-radius: 20px; border: 1px solid var(--bor
   <div class="header">
     <div class="header-left">
       <button class="menu-btn" onclick="toggleSidebar()">☰</button>
-      <span id="chatTitle" style="font-weight:600; white-space:nowrap; overflow:hidden; text-overflow:ellipsis; max-width: 150px;">Current Chat</span>
+      <span id="chatTitle" onclick="renameCurrentChat()" style="font-weight:600; white-space:nowrap; overflow:hidden; text-overflow:ellipsis; max-width: 150px; cursor:pointer;">New Chat</span>
+      <button class="icon-btn" onclick="renameCurrentChat()" style="margin-left:5px; opacity:0.6;">✏️</button>
     </div>
     <div class="header-controls">
       <select id="themeSelector" onchange="setTheme(this.value)">
-        <option value="dark">True Dark</option>
-        <option value="white">White</option>
-        <option value="pastel">Pastel</option>
-        <option value="neon">Neon</option>
-        <option value="forest">Forest</option>
-        <option value="coffee">Coffee</option>
-        <option value="terminal">Terminal</option>
+        <option value="dark">True Dark</option><option value="white">White</option><option value="pastel">Pastel</option><option value="neon">Neon</option><option value="forest">Forest</option><option value="coffee">Coffee</option><option value="terminal">Terminal</option>
       </select>
-      <button class="btn-small" onclick="exportChat()">📥</button>
-      <button class="btn-small" onclick="clearAll()" style="color:#ef4444;">🗑️</button>
+      <button class="btn-small" onclick="exportChat()">📥</button><button class="btn-small" onclick="clearAll()" style="color:#ef4444;">🗑️</button>
     </div>
   </div>
 
@@ -151,37 +97,27 @@ input { flex: 1; padding: 12px; border-radius: 20px; border: 1px solid var(--bor
 /* -------------------------------------------------------------------------
    🔐 API KEY CONFIGURATION
    ------------------------------------------------------------------------- */
-const API_KEY = "AIzaSyCf-18MLMfHZoHAkYQcG8NRkVlTk1u9eeQ"; // ⚠️ Paste your key here!
+const API_KEY = "AIzaSyCf-18MLMfHZoHAkYQcG8NRkVlTk1u9eeQ"; 
 
-/* --- THEME LOGIC (SYNCED WITH META TAG) --- */
-const themeColors = {
-  dark: "#000000", white: "#ffffff", pastel: "#fff1f2", neon: "#0a000f",
-  forest: "#051a10", coffee: "#271c19", terminal: "#000000"
-};
-
-function setTheme(t) {
-  document.body.className = t;
-  localStorage.setItem("hri_theme", t);
-  const meta = document.getElementById("themeMeta");
-  if(meta && themeColors[t]) meta.content = themeColors[t];
+/* --- AUTO-DISCOVERY --- */
+let ACTIVE_MODEL = "";
+async function findWorkingModel() {
+  const status = document.getElementById("model-status");
+  try {
+    const res = await fetch(`https://generativelanguage.googleapis.com/v1beta/models?key=${API_KEY}`);
+    const data = await res.json();
+    if (data.models) {
+      const models = data.models.map(m => m.name.replace("models/", ""));
+      ACTIVE_MODEL = models.find(m => m.includes("flash")) || models.find(m => m.includes("pro")) || models[0];
+      status.innerText = "🟢 Online"; status.style.color = "#4ade80";
+    }
+  } catch (e) { status.innerText = "🔴 Offline"; status.style.color = "#ef4444"; }
 }
 
 /* --- STATE MANAGEMENT --- */
-let ACTIVE_MODEL = ""; 
 let chats = JSON.parse(localStorage.getItem("hri_chats_v2")) || {};
 let currentChatId = localStorage.getItem("hri_current_id");
-
-// Mobile Logic
-function toggleSidebar() {
-  const sidebar = document.getElementById("sidebar");
-  const overlay = document.querySelector(".overlay");
-  const closeBtn = document.getElementById("closeSidebar");
-  sidebar.classList.toggle("open");
-  overlay.classList.toggle("active");
-  if(window.innerWidth <= 768) closeBtn.style.display = sidebar.classList.contains("open") ? "block" : "none";
-}
-
-function mobileLoadChat(id) { loadChat(id); if(window.innerWidth <= 768) toggleSidebar(); }
+const themeColors = { dark: "#000000", white: "#ffffff", pastel: "#fff1f2", neon: "#0a000f", forest: "#051a10", coffee: "#271c19", terminal: "#000000" };
 
 if (!currentChatId || !chats[currentChatId]) newChat();
 else loadChat(currentChatId);
@@ -189,10 +125,13 @@ else loadChat(currentChatId);
 const savedTheme = localStorage.getItem("hri_theme") || "dark";
 setTheme(savedTheme);
 document.getElementById("themeSelector").value = savedTheme;
-
 findWorkingModel();
 
+/* --- UTILS --- */
+function toggleSidebar() { const s=document.getElementById("sidebar"); const o=document.querySelector(".overlay"); const c=document.getElementById("closeSidebar"); s.classList.toggle("open"); o.classList.toggle("active"); if(window.innerWidth<=768)c.style.display=s.classList.contains("open")?"block":"none"; }
+function mobileLoadChat(id) { loadChat(id); if(window.innerWidth<=768) toggleSidebar(); }
 function save() { localStorage.setItem("hri_chats_v2", JSON.stringify(chats)); localStorage.setItem("hri_current_id", currentChatId); }
+function setTheme(t) { document.body.className = t; localStorage.setItem("hri_theme", t); const m=document.getElementById("themeMeta"); if(m && themeColors[t]) m.content=themeColors[t]; }
 
 function newChat() {
   const id = "chat_" + Date.now();
@@ -213,47 +152,64 @@ function loadChat(id) {
 }
 
 function renderSidebar() {
-  const list = document.getElementById("chatList");
-  list.innerHTML = "";
-  const ids = Object.keys(chats).sort().reverse();
-  ids.forEach(id => {
+  const l = document.getElementById("chatList"); l.innerHTML = "";
+  Object.keys(chats).sort().reverse().forEach(id => {
     const div = document.createElement("div");
     div.className = `chat-item ${id === currentChatId ? 'active' : ''}`;
-    div.innerHTML = `
-      <span onclick="mobileLoadChat('${id}')" style="flex:1; overflow:hidden; text-overflow:ellipsis; white-space:nowrap;">${chats[id].title}</span>
-      <div class="chat-actions">
-        <button class="icon-btn" onclick="deleteChat('${id}')">🗑️</button>
-      </div>`;
-    list.appendChild(div);
+    div.innerHTML = `<span onclick="mobileLoadChat('${id}')" style="flex:1; overflow:hidden; text-overflow:ellipsis; white-space:nowrap;">${chats[id].title}</span>
+    <div class="chat-actions"><button class="icon-btn" onclick="deleteChat('${id}')">🗑️</button></div>`;
+    l.appendChild(div);
   });
 }
 
 function addBubble(text, from) {
-  const div = document.createElement("div");
-  div.className = `msg ${from}`;
-  div.innerHTML = text.replace(/\n/g, "<br>");
-  const box = document.getElementById("messages");
-  box.appendChild(div);
-  box.scrollTop = box.scrollHeight;
+  const d = document.createElement("div"); d.className = `msg ${from}`; d.innerHTML = text.replace(/\n/g, "<br>");
+  const b = document.getElementById("messages"); b.appendChild(d); b.scrollTop = b.scrollHeight;
 }
 
 function deleteChat(id) { if(!confirm("Delete?"))return; delete chats[id]; const r=Object.keys(chats); if(r.length===0)newChat(); else loadChat(r[0]); }
-function exportChat() { const c=chats[currentChatId]; let t=`Chat: ${c.title}\n\n`; c.history.forEach(m=>t+=`[${m.from.toUpperCase()}]: ${m.text}\n`); const a=document.createElement("a"); a.href=URL.createObjectURL(new Blob([t],{type:"text/plain"})); a.download=`hri_chat.txt`; a.click(); }
 function clearAll() { if(confirm("Delete ALL?")) { localStorage.removeItem("hri_chats_v2"); location.reload(); } }
+function exportChat() { const c=chats[currentChatId]; let t=`Chat: ${c.title}\n\n`; c.history.forEach(m=>t+=`[${m.from.toUpperCase()}]: ${m.text}\n`); const a=document.createElement("a"); a.href=URL.createObjectURL(new Blob([t],{type:"text/plain"})); a.download=`hri_chat.txt`; a.click(); }
 
-async function findWorkingModel() {
-  const status = document.getElementById("model-status");
-  try {
-    const res = await fetch(`https://generativelanguage.googleapis.com/v1beta/models?key=${API_KEY}`);
-    const data = await res.json();
-    if (data.models) {
-      const models = data.models.map(m => m.name.replace("models/", ""));
-      ACTIVE_MODEL = models.find(m => m.includes("flash")) || models.find(m => m.includes("pro")) || models[0];
-      status.innerText = "🟢 Online"; status.style.color = "#4ade80";
-    }
-  } catch (e) { status.innerText = "🔴 Offline"; status.style.color = "#ef4444"; }
+/* --- ✏️ RENAME FEATURES --- */
+
+// 1. Manual Rename
+function renameCurrentChat() {
+  const newName = prompt("Rename chat to:", chats[currentChatId].title);
+  if (newName && newName.trim() !== "") {
+    chats[currentChatId].title = newName.trim();
+    document.getElementById("chatTitle").innerText = newName.trim();
+    renderSidebar();
+    save();
+  }
 }
 
+// 2. AI Auto-Generate Title
+async function generateAutoTitle(chatId) {
+  const chat = chats[chatId];
+  if (!chat || chat.history.length < 2) return; // Needs context
+
+  // Create a mini prompt just for the title
+  const context = chat.history.map(m => `${m.from}: ${m.text}`).join("\n");
+  const prompt = `Analyze the following chat and generate a very short, relevant title (max 4 words). Do not use quotes.\n\n${context}`;
+
+  try {
+    const res = await fetch(`https://generativelanguage.googleapis.com/v1beta/models/${ACTIVE_MODEL}:generateContent?key=${API_KEY}`, {
+      method: "POST", headers: { "Content-Type": "application/json" },
+      body: JSON.stringify({ contents: [{ parts: [{ text: prompt }] }] })
+    });
+    const data = await res.json();
+    if (!data.error && data.candidates) {
+      const newTitle = data.candidates[0].content.parts[0].text.replace(/['"]/g, "").trim();
+      chats[chatId].title = newTitle;
+      if (currentChatId === chatId) document.getElementById("chatTitle").innerText = newTitle;
+      renderSidebar();
+      save();
+    }
+  } catch (e) { console.log("Auto-title failed", e); }
+}
+
+/* --- SEND LOGIC --- */
 async function send() {
   const input = document.getElementById("input");
   const text = input.value.trim();
@@ -261,10 +217,10 @@ async function send() {
   if (!ACTIVE_MODEL) await findWorkingModel();
 
   input.value = "";
-  // 🔴 REMOVED input.blur() so the keyboard stays open!
   chats[currentChatId].history.push({ from: "user", text: text });
   addBubble(text, "user");
   
+  // Temporary title for very first message
   if (chats[currentChatId].history.length === 1) {
     chats[currentChatId].title = text.substring(0, 15) + "...";
     renderSidebar();
@@ -297,10 +253,14 @@ async function send() {
       chats[currentChatId].history.push({ from: "bot", text: aiText });
       addBubble(aiText, "bot");
       save();
+
+      // 🧠 TRIGGER AUTO-TITLE after the first bot response
+      if (chats[currentChatId].history.length === 2) {
+        generateAutoTitle(currentChatId);
+      }
     }
   } catch (e) { if(document.getElementById(loadingId))document.getElementById(loadingId).remove(); addBubble("⚠️ Network Error", "error"); }
 }
 </script>
 </body>
 </html>
-
