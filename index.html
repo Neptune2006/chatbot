@@ -8,11 +8,7 @@
 
 <style>
 /* --- 🎨 THEME ENGINE --- */
-:root {
-  --bg: #000000; --card: #121212; --text: #e5e5e5; --subtext: #a3a3a3;
-  --bot-bg: #1f1f1f; --user-bg: #2563eb; --accent: #2563eb; --border: #262626;
-  --font: system-ui, -apple-system, sans-serif;
-}
+:root { --bg: #000000; --card: #121212; --text: #e5e5e5; --subtext: #a3a3a3; --bot-bg: #1f1f1f; --user-bg: #2563eb; --accent: #2563eb; --border: #262626; --font: system-ui, -apple-system, sans-serif; }
 body.white { --bg: #ffffff; --card: #f8fafc; --text: #0f172a; --subtext: #64748b; --bot-bg: #e2e8f0; --user-bg: #2563eb; --accent: #2563eb; --border: #e2e8f0; }
 body.pastel { --bg: #fff1f2; --card: #ffffff; --text: #4a044e; --subtext: #be185d; --bot-bg: #fbcfe8; --user-bg: #f472b6; --accent: #db2777; --border: #fbcfe8; }
 body.neon { --bg: #0a000f; --card: #150024; --text: #d000ff; --subtext: #8a00ab; --bot-bg: #2b0047; --user-bg: #00ffea; --accent: #d000ff; --border: #450073; }
@@ -67,7 +63,7 @@ input { flex: 1; padding: 12px; border-radius: 20px; border: 1px solid var(--bor
   <div class="brand">hri ⚡ <button class="icon-btn" onclick="toggleSidebar()" style="display:none;" id="closeSidebar">✕</button></div>
   <button class="btn-new" onclick="newChat()">+ New Chat</button>
   <div class="history-list" id="chatList"></div>
-  <div style="font-size:11px; color:var(--subtext); text-align:center; margin-top:auto;" id="model-status">Connecting...</div>
+  <div style="font-size:11px; color:var(--subtext); text-align:center; margin-top:auto;" id="model-status">Starting...</div>
 </div>
 
 <div class="main">
@@ -93,16 +89,27 @@ input { flex: 1; padding: 12px; border-radius: 20px; border: 1px solid var(--bor
   </div>
 </div>
 
+<script>window.onerror=function(e,s,l){alert("⚠️ CRASHED: "+e+"\nLine: "+l+"\n\nDid you break the quotes around the API Key?");}</script>
+
 <script>
 /* -------------------------------------------------------------------------
    🔐 API KEY CONFIGURATION
    ------------------------------------------------------------------------- */
+// ⚠️ CHECK THIS LINE CAREFULLY! KEEP THE QUOTES!
 const API_KEY = "AIzaSyCf-18MLMfHZoHAkYQcG8NRkVlTk1u9eeQ"; 
 
 /* --- AUTO-DISCOVERY --- */
 let ACTIVE_MODEL = "";
 async function findWorkingModel() {
   const status = document.getElementById("model-status");
+  status.innerText = "🔍 Checking Key...";
+  
+  if(API_KEY.includes("PASTE_YOUR_KEY")) {
+    status.innerText = "❌ Missing Key"; status.style.color = "red";
+    alert("STOP! You forgot to paste your API Key in the code file.");
+    return;
+  }
+
   try {
     const res = await fetch(`https://generativelanguage.googleapis.com/v1beta/models?key=${API_KEY}`);
     const data = await res.json();
@@ -110,6 +117,8 @@ async function findWorkingModel() {
       const models = data.models.map(m => m.name.replace("models/", ""));
       ACTIVE_MODEL = models.find(m => m.includes("flash")) || models.find(m => m.includes("pro")) || models[0];
       status.innerText = "🟢 Online"; status.style.color = "#4ade80";
+    } else {
+      status.innerText = "❌ Invalid Key"; status.style.color = "red";
     }
   } catch (e) { status.innerText = "🔴 Offline"; status.style.color = "#ef4444"; }
 }
@@ -172,8 +181,6 @@ function clearAll() { if(confirm("Delete ALL?")) { localStorage.removeItem("hri_
 function exportChat() { const c=chats[currentChatId]; let t=`Chat: ${c.title}\n\n`; c.history.forEach(m=>t+=`[${m.from.toUpperCase()}]: ${m.text}\n`); const a=document.createElement("a"); a.href=URL.createObjectURL(new Blob([t],{type:"text/plain"})); a.download=`hri_chat.txt`; a.click(); }
 
 /* --- ✏️ RENAME FEATURES --- */
-
-// 1. Manual Rename
 function renameCurrentChat() {
   const newName = prompt("Rename chat to:", chats[currentChatId].title);
   if (newName && newName.trim() !== "") {
@@ -184,14 +191,12 @@ function renameCurrentChat() {
   }
 }
 
-// 2. AI Auto-Generate Title
 async function generateAutoTitle(chatId) {
   const chat = chats[chatId];
-  if (!chat || chat.history.length < 2) return; // Needs context
+  if (!chat || chat.history.length < 2) return; 
 
-  // Create a mini prompt just for the title
   const context = chat.history.map(m => `${m.from}: ${m.text}`).join("\n");
-  const prompt = `Analyze the following chat and generate a very short, relevant title (max 4 words). Do not use quotes.\n\n${context}`;
+  const prompt = `Generate a 3-4 word title for this chat. No quotes.\n\n${context}`;
 
   try {
     const res = await fetch(`https://generativelanguage.googleapis.com/v1beta/models/${ACTIVE_MODEL}:generateContent?key=${API_KEY}`, {
@@ -220,7 +225,6 @@ async function send() {
   chats[currentChatId].history.push({ from: "user", text: text });
   addBubble(text, "user");
   
-  // Temporary title for very first message
   if (chats[currentChatId].history.length === 1) {
     chats[currentChatId].title = text.substring(0, 15) + "...";
     renderSidebar();
@@ -254,7 +258,7 @@ async function send() {
       addBubble(aiText, "bot");
       save();
 
-      // 🧠 TRIGGER AUTO-TITLE after the first bot response
+      // Trigger auto-title
       if (chats[currentChatId].history.length === 2) {
         generateAutoTitle(currentChatId);
       }
